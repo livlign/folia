@@ -2,9 +2,9 @@
 
 **Live:** <https://folia-erf.pages.dev>
 
-A personal reading app for the idle-moment reflex slot. Open it where Facebook
-used to be: it shows one screenful of a curated non-fiction book, picked at
-random from pages you haven't seen. Not intrigued — reroll. Intrigued — read on,
+A personal reading app for the idle-moment reflex slot. Open it in the spare
+moment you'd otherwise fill by doom-scrolling: it shows one screenful of a
+curated non-fiction book, picked at random from pages you haven't seen. Not intrigued — reroll. Intrigued — read on,
 sequentially. Every committed read has a natural end; the library is finite and
 curated by hand. See [`folia-prd.md`](folia-prd.md) for the *why* and
 [`folia-build-spec.md`](folia-build-spec.md) for the *how*.
