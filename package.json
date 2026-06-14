@@ -4,6 +4,10 @@
   "description": "Folia — a shelf of leaves, read one page at a time. Static PWA deployed to Cloudflare Pages.",
   "scripts": {
     "test": "node --test tests/*.mjs",
-    "deploy": "npx wrangler pages deploy . --project-name=folia --commit-dirty=true"
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.100.0"
   }
 }
