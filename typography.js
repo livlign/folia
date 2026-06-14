@@ -1,11 +1,12 @@
-// Curated to families that are reliably distinct on any device. Named system
-// fonts (Georgia, Palatino) were dropped — most devices fall back to the same
-// serif, so they looked identical. Only Newsreader and Mono are bundled; Serif
-// and Sans use the platform's own serif/sans, which always differ in category.
+// All self-hosted and Vietnamese-capable, spanning soft → rigid: Newsreader and
+// Lora (serifs), Roboto Slab (slab — the middle ground), Source Sans 3
+// (humanist sans), and Spline Sans Mono. All variable except Mono, so the
+// weight control applies smoothly.
 export const FONTS = [
   { id: 'newsreader', name: 'Newsreader', stack: "'Newsreader', Georgia, serif" },
-  { id: 'serif', name: 'Serif', stack: "ui-serif, Georgia, 'Times New Roman', serif" },
-  { id: 'sans', name: 'Sans', stack: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" },
+  { id: 'lora', name: 'Lora', stack: "'Lora', Georgia, serif" },
+  { id: 'slab', name: 'Slab', stack: "'Roboto Slab', Georgia, serif" },
+  { id: 'sans', name: 'Sans', stack: "'Source Sans 3', system-ui, sans-serif" },
   { id: 'mono', name: 'Mono', stack: "'Spline Sans Mono', ui-monospace, 'SF Mono', Menlo, monospace" },
 ];
 

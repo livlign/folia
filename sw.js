@@ -1,4 +1,4 @@
-const CACHE = 'folia-shell-v19';
+const CACHE = 'folia-shell-v20';
 const SHELL = [
   './',
   './index.html',
@@ -24,6 +24,15 @@ const SHELL = [
   './fonts/newsreader-latin-ext.woff2',
   './fonts/newsreader-vietnamese.woff2',
   './fonts/splinemono-latin.woff2',
+  './fonts/lora-latin.woff2',
+  './fonts/lora-latin-ext.woff2',
+  './fonts/lora-vietnamese.woff2',
+  './fonts/robotoslab-latin.woff2',
+  './fonts/robotoslab-latin-ext.woff2',
+  './fonts/robotoslab-vietnamese.woff2',
+  './fonts/sourcesans-latin.woff2',
+  './fonts/sourcesans-latin-ext.woff2',
+  './fonts/sourcesans-vietnamese.woff2',
 ];
 
 // Cache each asset independently so a single failed fetch can't abort the whole
