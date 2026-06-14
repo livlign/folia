@@ -189,7 +189,7 @@ export function createLoop(ctx) {
       wrap.append(btn, status);
     } else {
       wrap.append(el('p', { className: 'install-note' },
-        'To install, open Folia in Chrome and choose menu ⋮ → “Install app”. On iPhone, use Share → “Add to Home Screen”. If nothing happens, your launcher may need to allow home-screen shortcuts.'));
+        'No install option here usually means Folia is already installed — check your home screen, app drawer, or Settings → Apps for “Folia”. To install fresh: open in Chrome → ⋮ → “Install app” (iPhone: Share → “Add to Home Screen”). On Xiaomi/MIUI, also enable Settings → Apps → Chrome → “Display pop-up windows while running in the background” so it can place the icon.'));
     }
     return wrap;
   }

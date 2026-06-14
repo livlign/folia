@@ -1,4 +1,4 @@
-const CACHE = 'folia-shell-v17';
+const CACHE = 'folia-shell-v18';
 const SHELL = [
   './',
   './index.html',
