@@ -56,8 +56,8 @@ export function createLoop(ctx) {
 
   function header(book, start, total, { left, shuffleBtn }) {
     const pct = el('span', { className: 'bar-pct' }, Math.round(((start + 1) / total) * 100) + '%');
-    const right = [pct, el('button', { className: 'bar-btn', title: 'Progress', onclick: toSettings }, '≡')];
-    if (shuffleBtn) right.push(el('button', { className: 'bar-btn', title: 'Another page', onclick: shuffle }, '↻'));
+    const right = [pct, el('button', { className: 'bar-btn', title: 'Progress', onclick: openSettings }, '≡')];
+    if (shuffleBtn) right.push(el('button', { className: 'bar-btn', title: 'Another page', onclick: reroll }, '↻'));
     const bar = el('header', { className: 'bar' }, [
       left || el('span', {}, ''),
       el('span', { className: 'bar-title' }, book.title),
@@ -66,8 +66,9 @@ export function createLoop(ctx) {
     return { bar, pct };
   }
 
-  // ---- navigation ----
-  function shuffle() { transitionTo(toDiscovery); }
+  // ---- navigation (history-backed, so Android back/edge-swipe maps to in-app back) ----
+  function reroll() { history.replaceState({ view: 'discovery' }, ''); transitionTo(toDiscovery); }
+  function goBack() { history.back(); }
 
   function themePicker() {
     const wrap = el('div', { className: 'themes' });
@@ -85,28 +86,27 @@ export function createLoop(ctx) {
     return wrap;
   }
 
-  function toSettings() {
-    transitionTo(() => {
-      const bar = el('header', { className: 'bar' }, [
-        el('span', { className: 'wordmark' }, 'Folia'),
-        el('button', { className: 'bar-link', onclick: shuffle }, 'Done'),
-      ]);
-      const content = el('section', { className: 'content settings' });
-      content.append(el('h2', { className: 'sec' }, 'Theme'), themePicker());
-      content.append(el('h2', { className: 'sec' }, 'Progress'));
-      const list = el('ul', { className: 'report-list' });
-      const rows = buildReport(ctx.books, ctx.seenMap, ctx.commits);
-      if (!rows.length) list.append(el('li', { className: 'empty' }, 'Nothing imported yet.'));
-      for (const r of rows) {
-        list.append(el('li', { className: 'report-row' }, [
-          el('span', { className: 'report-title' }, r.title),
-          el('span', { className: 'report-stat' }, `${r.percent}% read · ${r.commits} ${r.commits === 1 ? 'read' : 'reads'}`),
-        ]));
-      }
-      content.append(list);
-      mountScreen(el('div', { className: 'screen' }, [bar, content]));
-    });
+  function renderSettings() {
+    const bar = el('header', { className: 'bar' }, [
+      el('span', { className: 'wordmark' }, 'Folia'),
+      el('button', { className: 'bar-link', onclick: goBack }, 'Done'),
+    ]);
+    const content = el('section', { className: 'content settings' });
+    content.append(el('h2', { className: 'sec' }, 'Theme'), themePicker());
+    content.append(el('h2', { className: 'sec' }, 'Progress'));
+    const list = el('ul', { className: 'report-list' });
+    const rows = buildReport(ctx.books, ctx.seenMap, ctx.commits);
+    if (!rows.length) list.append(el('li', { className: 'empty' }, 'Nothing imported yet.'));
+    for (const r of rows) {
+      list.append(el('li', { className: 'report-row' }, [
+        el('span', { className: 'report-title' }, r.title),
+        el('span', { className: 'report-stat' }, `${r.percent}% read · ${r.commits} ${r.commits === 1 ? 'read' : 'reads'}`),
+      ]));
+    }
+    content.append(list);
+    mountScreen(el('div', { className: 'screen' }, [bar, content]));
   }
+  function openSettings() { history.pushState({ view: 'settings' }, ''); transitionTo(renderSettings); }
 
   function toDiscovery() {
     const pick = pickDiscovery(ctx.books, ctx.seenMap, rng);
@@ -148,14 +148,14 @@ export function createLoop(ctx) {
     content.addEventListener('touchend', (e) => {
       const t = e.changedTouches[0];
       if (e.timeStamp - t0 < 700 && Math.hypot(t.clientX - x0, t.clientY - y0) > 45) {
-        swiped = true; shuffle();
+        swiped = true; reroll();
       }
     }, { passive: true });
     let wheelLock = false;
     content.addEventListener('wheel', (e) => {
       if (wheelLock || Math.abs(e.deltaY) < 8) return;
       wheelLock = true; setTimeout(() => { wheelLock = false; }, 500);
-      shuffle();
+      reroll();
     }, { passive: true });
   }
 
@@ -163,17 +163,29 @@ export function createLoop(ctx) {
   function enterReading(book, start) {
     ctx.persist.incCommit(book.id);
     ctx.commits.set(book.id, (ctx.commits.get(book.id) || 0) + 1);
+    history.pushState({ view: 'reading', id: book.id, start }, '');
     transitionTo(() => renderReading(book, start));
   }
 
   function renderReading(book, start) {
     const total = book.paragraphs.length;
-    const back = el('button', { className: 'bar-btn', title: 'Discover', onclick: shuffle }, '←');
+    const back = el('button', { className: 'bar-btn', title: 'Discover', onclick: goBack }, '←');
     const { bar, pct } = header(book, start, total, { left: back, shuffleBtn: false });
     const progress = el('div', { className: 'progress' });
     const content = el('section', { className: 'content reading' });
     const screen = el('div', { className: 'screen read' }, [bar, progress, content]);
     mountScreen(screen);
+
+    // left-swipe returns to discovery (mirrors the Android back gesture)
+    let sx = 0, sy = 0, st = 0;
+    content.addEventListener('touchstart', (e) => {
+      const t = e.changedTouches[0]; sx = t.clientX; sy = t.clientY; st = e.timeStamp;
+    }, { passive: true });
+    content.addEventListener('touchend', (e) => {
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sx, dy = t.clientY - sy;
+      if (e.timeStamp - st < 600 && dx < -55 && Math.abs(dx) > Math.abs(dy) * 2) goBack();
+    }, { passive: true });
 
     let maxIdx = start;
     const setPosition = (i) => {
@@ -260,6 +272,23 @@ export function createLoop(ctx) {
     else botSentinel.replaceWith(el('div', { className: 'book-end' }, '· end ·'));
   }
 
+  // System back (Android gesture/button) and forward replay route here.
+  window.addEventListener('popstate', (e) => {
+    const s = e.state || { view: 'discovery' };
+    if (s.view === 'reading') {
+      const book = ctx.books.find((b) => b.id === s.id);
+      transitionTo(book ? () => renderReading(book, s.start) : toDiscovery);
+    } else if (s.view === 'settings') {
+      transitionTo(renderSettings);
+    } else {
+      transitionTo(toDiscovery);
+    }
+  });
   window.addEventListener('pagehide', flushSeen);
-  return { toDiscovery };
+
+  function start() {
+    history.replaceState({ view: 'discovery' }, '');
+    toDiscovery();
+  }
+  return { start };
 }

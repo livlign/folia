@@ -65,7 +65,7 @@ async function boot() {
     rng: Math.random,
     persist: { markSeen: store.markSeen, incCommit: store.incCommit },
   });
-  loop.toDiscovery();
+  loop.start();
 }
 
 boot();
