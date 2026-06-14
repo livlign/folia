@@ -1,5 +1,7 @@
 # Folia
 
+**Live:** <https://folia-erf.pages.dev>
+
 A personal reading app for the idle-moment reflex slot. Open it where Facebook
 used to be: it shows one screenful of a curated non-fiction book, picked at
 random from pages you haven't seen. Not intrigued — reroll. Intrigued — read on,
@@ -14,8 +16,8 @@ no content. It is not a multi-user platform or a general book pipeline.
 
 - **Import** — a local Python CLI (`cli/`) that extracts a PDF into clean,
   reflowable paragraph JSON. Run at a desk, a few times.
-- **Reader** — a buildless vanilla-JS PWA, served by GitHub Pages, offline after
-  first load. (Phases 2–4.)
+- **Reader** — a buildless vanilla-JS PWA: IndexedDB, a service worker, offline
+  after first load. Deployed to Cloudflare Pages.
 
 The only contract between them is the JSON in the library (`books/`).
 
@@ -39,31 +41,40 @@ breaks, segments into ordered paragraphs, then **previews the result and asks yo
 to accept or reject** before writing anything. Rejected PDFs never enter the
 library — the gate is what protects the comfort bar against badly-reflowing PDFs
 (scanned, two-column, heavy-layout). `add` writes `books/<id>.json` and updates
-`books/books.json`; commit and push to publish.
+`books/books.json`.
 
 ## Reader
 
-The reader is buildless — no install step. The manifest uses relative paths, so
-it works correctly whether served from a domain root or a subpath.
+Buildless — no bundler, no framework, no build step. Pages are computed at render
+against the live viewport; seen-state is tracked per paragraph (never page
+numbers). Discovery is flat random over unseen pages — no ranking or
+personalization. A session is meant to be short and to end.
 
-**Deploy (Cloudflare Pages, served at a root origin):**
+Settings (the `≡` menu) cover theme, reading typography (font / weight / style /
+size), per-book progress, a typed-confirm progress reset, and an install button.
+
+### Deploy
+
+The reader serves itself at a **root origin** via Cloudflare Pages, which is what
+makes the PWA reliably installable on Android — WebAPK minting is flaky for PWAs
+served from a shared-host **subpath** like `https://<user>.github.io/folia/`.
 
 ```sh
-npx wrangler login        # once
-npm run deploy            # wrangler pages deploy . --project-name=folia
+npx wrangler login   # once
+npm run deploy       # runs deploy.sh
 ```
 
-`.assetsignore` keeps `cli/`, `tests/`, and docs out of the upload. A root
-origin (e.g. `folia.pages.dev`) is what makes the PWA reliably installable on
-Android — WebAPK minting is flaky for PWAs served from a shared-host **subpath**
-like `https://<user>.github.io/folia/`, so prefer the root origin for install.
-GitHub Pages still works for browsing.
+`deploy.sh` stages only the runtime files (HTML/CSS/JS, manifest, `icons/`,
+`fonts/`, `books/`) into `.deploy/` and runs `wrangler pages deploy` — keeping
+the Python venv, CLI, tests, and docs out of the upload. The manifest uses
+relative paths, so the same files also work if served from a subpath.
 
-Open it on Android and use Chrome's *Install app* to put it in the reflex slot;
-it syncs `books/` into IndexedDB and runs fully offline after first load.
+Open it on Android via Chrome's *Install app*; it syncs `books/` into IndexedDB
+and runs fully offline after first load.
 
-To run locally, serve the repo root over HTTP (a service worker and ES modules
-need a real origin, not `file://`):
+### Run locally
+
+A service worker and ES modules need a real origin, not `file://`:
 
 ```sh
 python3 -m http.server 8000   # then open http://localhost:8000/
@@ -73,8 +84,12 @@ python3 -m http.server 8000   # then open http://localhost:8000/
 
 ```sh
 .venv/bin/python -m unittest discover -s cli/tests -t cli/tests   # CLI (Python)
-node --test tests/*.test.mjs                                      # reader logic (JS)
+npm test                                                          # reader logic (JS)
 ```
 
 The JS tests cover the pure cores — pagination, the discovery picker, seen-state,
 and the report — with no browser or dependencies.
+
+## License
+
+[MIT](LICENSE) © livlign
