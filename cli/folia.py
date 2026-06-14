@@ -5,6 +5,7 @@ import sys
 from extract import extract_blocks
 from clean import strip_headers_footers
 from segment import segment_paragraphs
+from prune import prune
 from emit import slugify, load_manifest, emit_book, remove_book
 
 DEFAULT_BOOKS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "books")
@@ -13,7 +14,7 @@ DEFAULT_BOOKS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath
 def build_paragraphs(pdf_path):
     blocks = extract_blocks(pdf_path)
     blocks = strip_headers_footers(blocks)
-    return segment_paragraphs(blocks)
+    return prune(segment_paragraphs(blocks))
 
 
 def preview(paragraphs, head=8, sample=5):
