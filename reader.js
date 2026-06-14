@@ -1,6 +1,7 @@
 import { fill, domMeasurer } from './pagination.js';
 import { pickDiscovery } from './discovery.js';
-import { buildReport, renderReport } from './report.js';
+import { buildReport } from './report.js';
+import { THEMES, getTheme, setTheme } from './theme.js';
 
 const CHUNK = 16; // paragraphs appended per scroll load-more while reading
 
@@ -53,15 +54,12 @@ export function createLoop(ctx) {
     requestAnimationFrame(() => screen.classList.remove('entering'));
   }
 
-  function header(book, start, total, leftBtn) {
+  function header(book, start, total, { left, shuffleBtn }) {
     const pct = el('span', { className: 'bar-pct' }, Math.round(((start + 1) / total) * 100) + '%');
-    const right = [
-      pct,
-      el('button', { className: 'bar-btn', title: 'Progress', onclick: toReport }, '≡'),
-    ];
-    if (!leftBtn) right.push(el('button', { className: 'bar-btn', title: 'Another page', onclick: shuffle }, '↻'));
+    const right = [pct, el('button', { className: 'bar-btn', title: 'Progress', onclick: toSettings }, '≡')];
+    if (shuffleBtn) right.push(el('button', { className: 'bar-btn', title: 'Another page', onclick: shuffle }, '↻'));
     const bar = el('header', { className: 'bar' }, [
-      leftBtn || el('span', {}, ''),
+      left || el('span', {}, ''),
       el('span', { className: 'bar-title' }, book.title),
       ...right,
     ]);
@@ -71,12 +69,42 @@ export function createLoop(ctx) {
   // ---- navigation ----
   function shuffle() { transitionTo(toDiscovery); }
 
-  function toReport() {
+  function themePicker() {
+    const wrap = el('div', { className: 'themes' });
+    const sync = () => wrap.querySelectorAll('.theme-chip').forEach((c) =>
+      c.classList.toggle('active', c.dataset.theme === getTheme()));
+    THEMES.forEach((t) => {
+      const swatch = el('span', { className: 'sw' });
+      swatch.style.background = `linear-gradient(135deg, ${t.paper} 0 50%, ${t.accent} 50% 100%)`;
+      const chip = el('button', { className: 'theme-chip',
+        onclick: () => { setTheme(t.id); sync(); } }, [swatch, el('span', {}, t.name)]);
+      chip.dataset.theme = t.id;
+      wrap.append(chip);
+    });
+    sync();
+    return wrap;
+  }
+
+  function toSettings() {
     transitionTo(() => {
-      renderReport(mount, buildReport(ctx.books, ctx.seenMap, ctx.commits), shuffle);
-      const screen = mount.querySelector('.screen');
-      screen.classList.add('entering');
-      requestAnimationFrame(() => screen.classList.remove('entering'));
+      const bar = el('header', { className: 'bar' }, [
+        el('span', { className: 'wordmark' }, 'Folia'),
+        el('button', { className: 'bar-link', onclick: shuffle }, 'Done'),
+      ]);
+      const content = el('section', { className: 'content settings' });
+      content.append(el('h2', { className: 'sec' }, 'Theme'), themePicker());
+      content.append(el('h2', { className: 'sec' }, 'Progress'));
+      const list = el('ul', { className: 'report-list' });
+      const rows = buildReport(ctx.books, ctx.seenMap, ctx.commits);
+      if (!rows.length) list.append(el('li', { className: 'empty' }, 'Nothing imported yet.'));
+      for (const r of rows) {
+        list.append(el('li', { className: 'report-row' }, [
+          el('span', { className: 'report-title' }, r.title),
+          el('span', { className: 'report-stat' }, `${r.percent}% read · ${r.commits} ${r.commits === 1 ? 'read' : 'reads'}`),
+        ]));
+      }
+      content.append(list);
+      mountScreen(el('div', { className: 'screen' }, [bar, content]));
     });
   }
 
@@ -98,10 +126,11 @@ export function createLoop(ctx) {
   // ---- DISCOVERY: one random page; swipe/scroll jumps to another; tap reads ----
   function renderDiscovery(book, start) {
     const total = book.paragraphs.length;
-    const { bar } = header(book, start, total, null);
+    const pill = el('span', { className: 'mode-pill' }, 'Discover');
+    const { bar } = header(book, start, total, { left: pill, shuffleBtn: true });
     const content = el('section', { className: 'content' });
     const hint = el('div', { className: 'hint' }, 'Tap to read · swipe for another');
-    const screen = el('div', { className: 'screen' }, [bar, content, hint]);
+    const screen = el('div', { className: 'screen discover' }, [bar, content, hint]);
     mountScreen(screen);
 
     const end = fill(book.paragraphs, start, domMeasurer(content, paraEl));
@@ -140,10 +169,10 @@ export function createLoop(ctx) {
   function renderReading(book, start) {
     const total = book.paragraphs.length;
     const back = el('button', { className: 'bar-btn', title: 'Discover', onclick: shuffle }, '←');
-    const { bar, pct } = header(book, start, total, back);
+    const { bar, pct } = header(book, start, total, { left: back, shuffleBtn: false });
     const progress = el('div', { className: 'progress' });
     const content = el('section', { className: 'content reading' });
-    const screen = el('div', { className: 'screen' }, [bar, progress, content]);
+    const screen = el('div', { className: 'screen read' }, [bar, progress, content]);
     mountScreen(screen);
 
     let maxIdx = start;

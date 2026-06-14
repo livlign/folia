@@ -1,14 +1,57 @@
-:root {
+:root,
+:root[data-theme="paper"] {
   --paper: #f4efe6;
+  --card: #fbf7ef;
   --ink: #2b2622;
   --muted: #8a7f70;
   --accent: #2f4f3e;
   --rule: #e2d9c9;
+}
+
+:root[data-theme="light"] {
+  --paper: #ffffff;
+  --card: #fafafa;
+  --ink: #202020;
+  --muted: #8a8a8a;
+  --accent: #2f6f54;
+  --rule: #ececec;
+}
+
+:root[data-theme="sepia"] {
+  --paper: #f4ecd8;
+  --card: #faf3e2;
+  --ink: #5b4636;
+  --muted: #9a8a72;
+  --accent: #8a5a2b;
+  --rule: #e3d6bb;
+}
+
+:root[data-theme="dark"] {
+  --paper: #15140f;
+  --card: #1e1c16;
+  --ink: #e9e3d6;
+  --muted: #8f877a;
+  --accent: #9cc4ad;
+  --rule: #322e27;
+}
+
+:root[data-theme="vintage"] {
+  --paper: #e7dabd;
+  --card: #efe4ca;
+  --ink: #43382a;
+  --muted: #867552;
+  --accent: #8c4a2f;
+  --rule: #cdbd99;
+}
+
+:root {
   --reading: Georgia, 'Iowan Old Style', 'Palatino Linotype', Palatino, serif;
   --ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 * { box-sizing: border-box; }
+
+html { background: var(--paper); transition: background 0.2s ease; }
 
 html, body {
   margin: 0;
@@ -148,6 +191,78 @@ body {
   font-size: 0.8rem;
   letter-spacing: 0.15em;
   padding: 1.5rem 0 2.5rem;
+}
+
+/* discovery vs reading distinction */
+.mode-pill {
+  font-family: var(--ui);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  white-space: nowrap;
+}
+
+.screen.discover .content {
+  margin: 0.5rem 1.1rem;
+  padding: 1.4rem 1.4rem;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* theme picker + settings */
+.content.settings {
+  overflow-y: auto;
+  font-family: var(--ui);
+}
+
+.sec {
+  font-family: var(--ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 1.25rem 0 0.6rem;
+}
+
+.themes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.theme-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.8rem 0.45rem 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--ui);
+  font-size: 0.9rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.theme-chip.active {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.theme-chip .sw {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .report-list {

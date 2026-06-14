@@ -1,4 +1,4 @@
-const CACHE = 'folia-shell-v4';
+const CACHE = 'folia-shell-v5';
 const SHELL = [
   './',
   './index.html',
@@ -9,6 +9,7 @@ const SHELL = [
   './pagination.js',
   './reader.js',
   './report.js',
+  './theme.js',
   './styles.css',
   './manifest.webmanifest',
   './icons/icon-192.png',
