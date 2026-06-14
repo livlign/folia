@@ -194,28 +194,70 @@ export function createLoop(ctx) {
     }, { root: content });
 
     const end = fill(book.paragraphs, start, domMeasurer(content, paraEl));
+    let loadedStart = start;
     let loadedEnd = end;
     [...content.children].forEach((node, k) => { node.dataset.idx = start + k; seenObserver.observe(node); });
     setPosition(start);
-    progress.style.width = Math.round(((start + 1) / total) * 100) + '%';
 
-    const sentinel = el('div', { className: 'sentinel' });
-    content.append(sentinel);
-    const loadObserver = new IntersectionObserver((entries) => {
-      if (!entries[0].isIntersecting) return;
-      const from = loadedEnd + 1;
-      const to = Math.min(total - 1, loadedEnd + CHUNK);
-      for (let i = from; i <= to; i++) {
+    const topSentinel = el('div', { className: 'sentinel' });
+    const botSentinel = el('div', { className: 'sentinel' });
+    content.insertBefore(topSentinel, content.firstChild);
+    content.append(botSentinel);
+
+    // scroll up loads the preceding context, preserving the reading position
+    const topObserver = new IntersectionObserver(() => {
+      if (loadedStart <= 0) return;
+      const from = Math.max(0, loadedStart - CHUNK);
+      const before = content.scrollHeight;
+      const anchor = topSentinel.nextSibling;
+      for (let i = from; i < loadedStart; i++) {
         const node = paraEl(book.paragraphs[i]); node.dataset.idx = i;
-        content.insertBefore(node, sentinel); seenObserver.observe(node);
+        content.insertBefore(node, anchor); seenObserver.observe(node);
+      }
+      content.scrollTop += content.scrollHeight - before;
+      loadedStart = from;
+      if (loadedStart === 0) {
+        topObserver.disconnect();
+        topSentinel.replaceWith(el('div', { className: 'book-end' }, '· beginning ·'));
+      }
+    }, { root: content, rootMargin: '400px' });
+
+    // scroll down continues the book
+    const botObserver = new IntersectionObserver((entries) => {
+      if (!entries[0].isIntersecting) return;
+      const to = Math.min(total - 1, loadedEnd + CHUNK);
+      for (let i = loadedEnd + 1; i <= to; i++) {
+        const node = paraEl(book.paragraphs[i]); node.dataset.idx = i;
+        content.insertBefore(node, botSentinel); seenObserver.observe(node);
       }
       loadedEnd = to;
       if (loadedEnd >= total - 1) {
-        loadObserver.disconnect();
-        sentinel.replaceWith(el('div', { className: 'book-end' }, '· end ·'));
+        botObserver.disconnect();
+        botSentinel.replaceWith(el('div', { className: 'book-end' }, '· end ·'));
       }
-    }, { root: content, rootMargin: '300px' });
-    if (loadedEnd < total - 1) loadObserver.observe(sentinel);
+    }, { root: content, rootMargin: '400px' });
+
+    // seed some preceding context so the landing sits mid-page (scroll up to read above)
+    if (loadedStart > 0) {
+      const from = Math.max(0, loadedStart - CHUNK);
+      for (let i = from; i < loadedStart; i++) {
+        const node = paraEl(book.paragraphs[i]); node.dataset.idx = i;
+        content.insertBefore(node, topSentinel.nextSibling); seenObserver.observe(node);
+      }
+      const seeded = loadedStart - from;
+      loadedStart = from;
+      requestAnimationFrame(() => {
+        let h = 0, n = topSentinel.nextSibling;
+        for (let k = 0; k < seeded && n; k++) { h += n.offsetHeight; n = n.nextSibling; }
+        content.scrollTop = Math.max(0, h - 56); // landing near top, a peek of context above
+        if (loadedStart === 0) { topObserver.disconnect(); topSentinel.replaceWith(el('div', { className: 'book-end' }, '· beginning ·')); }
+        else topObserver.observe(topSentinel);
+      });
+    } else {
+      topSentinel.replaceWith(el('div', { className: 'book-end' }, '· beginning ·'));
+    }
+    if (loadedEnd < total - 1) botObserver.observe(botSentinel);
+    else botSentinel.replaceWith(el('div', { className: 'book-end' }, '· end ·'));
   }
 
   window.addEventListener('pagehide', flushSeen);

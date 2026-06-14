@@ -1,74 +1,85 @@
+/* ── Self-hosted type (offline-safe). Newsreader: characterful reading serif with
+   Vietnamese coverage. Spline Sans Mono: specimen-tag labels. ── */
+@font-face {
+  font-family: 'Newsreader'; font-style: normal; font-weight: 400 600; font-display: swap;
+  src: url('fonts/newsreader-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Newsreader'; font-style: normal; font-weight: 400 600; font-display: swap;
+  src: url('fonts/newsreader-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Newsreader'; font-style: normal; font-weight: 400 600; font-display: swap;
+  src: url('fonts/newsreader-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Spline Sans Mono'; font-style: normal; font-weight: 500; font-display: swap;
+  src: url('fonts/splinemono-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2122, U+2212, U+FEFF, U+FFFD;
+}
+
 :root,
 :root[data-theme="paper"] {
-  --paper: #f4efe6;
-  --card: #fbf7ef;
-  --ink: #2b2622;
-  --muted: #8a7f70;
-  --accent: #2f4f3e;
-  --rule: #e2d9c9;
+  --paper: #efe7d6; --card: #f7f1e3; --ink: #2c271d; --muted: #8c7f66; --accent: #4a5d3a; --rule: #d8ccb4;
 }
-
 :root[data-theme="light"] {
-  --paper: #ffffff;
-  --card: #fafafa;
-  --ink: #202020;
-  --muted: #8a8a8a;
-  --accent: #2f6f54;
-  --rule: #ececec;
+  --paper: #f6f5f2; --card: #ffffff; --ink: #211f1c; --muted: #8d877c; --accent: #3a6b4f; --rule: #e4e0d7;
 }
-
 :root[data-theme="sepia"] {
-  --paper: #f4ecd8;
-  --card: #faf3e2;
-  --ink: #5b4636;
-  --muted: #9a8a72;
-  --accent: #8a5a2b;
-  --rule: #e3d6bb;
+  --paper: #ece0c6; --card: #f5ecd6; --ink: #4b3b29; --muted: #9c8763; --accent: #9a5b25; --rule: #ddccaa;
 }
-
 :root[data-theme="dark"] {
-  --paper: #15140f;
-  --card: #1e1c16;
-  --ink: #e9e3d6;
-  --muted: #8f877a;
-  --accent: #9cc4ad;
-  --rule: #322e27;
+  --paper: #16140f; --card: #1f1c16; --ink: #e6ddca; --muted: #8a8170; --accent: #a8c39a; --rule: #322d24;
 }
-
 :root[data-theme="vintage"] {
-  --paper: #e7dabd;
-  --card: #efe4ca;
-  --ink: #43382a;
-  --muted: #867552;
-  --accent: #8c4a2f;
-  --rule: #cdbd99;
+  --paper: #ddcfac; --card: #e7dbbd; --ink: #3f3322; --muted: #84714e; --accent: #93472a; --rule: #c7b790;
 }
 
 :root {
-  --reading: Georgia, 'Iowan Old Style', 'Palatino Linotype', Palatino, serif;
-  --ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --reading: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --label: 'Spline Sans Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 }
 
 * { box-sizing: border-box; }
 
-html { background: var(--paper); transition: background 0.2s ease; }
+html {
+  background: var(--paper);
+  overflow-x: hidden;
+  transition: background 0.25s ease;
+}
 
 html, body {
   margin: 0;
-  background: var(--paper);
   color: var(--ink);
   font-family: var(--reading);
+  font-optical-sizing: auto;
   -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
 }
 
-body {
-  min-height: 100vh;
-  min-height: 100dvh;
+body { min-height: 100vh; min-height: 100dvh; }
+
+/* faint paper grain — tactile, not decorative */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
 }
 
 #app {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: 40rem;
+  max-width: 41rem;
+  min-width: 0;
   margin: 0 auto;
   height: 100vh;
   height: 100dvh;
@@ -77,228 +88,209 @@ body {
 
 .screen {
   flex: 1;
+  min-width: 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  transition: opacity 0.18s ease, transform 0.18s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
-
-.screen.entering { opacity: 0; transform: translateY(10px); }
-.screen.leaving { opacity: 0; transform: translateY(-10px); }
-
+.screen.entering { opacity: 0; transform: translateY(8px); }
+.screen.leaving { opacity: 0; transform: translateY(-8px); }
 @media (prefers-reduced-motion: reduce) {
   .screen { transition: opacity 0.12s ease; }
   .screen.entering, .screen.leaving { transform: none; }
 }
 
+/* ── top bar ── */
 .bar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
-  padding: calc(0.75rem + env(safe-area-inset-top)) 1.25rem 0.4rem;
+  gap: 0.7rem;
+  min-width: 0;
+  padding: calc(0.8rem + env(safe-area-inset-top)) 1.25rem 0.5rem;
 }
-
-.bar .wordmark {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--accent);
-}
-
 .bar-title {
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-family: var(--ui);
+  font-family: var(--reading);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+.wordmark {
+  font-family: var(--reading);
+  font-style: italic;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   color: var(--accent);
 }
-
-.bar-pct {
-  font-family: var(--ui);
-  font-size: 0.8rem;
-  color: var(--muted);
-  white-space: nowrap;
+.label, .bar-pct, .mode-pill, .hint, .sec, .book-end, .report-stat, .theme-chip, .bar-link {
+  font-family: var(--label);
 }
-
-.bar-btn,
-.bar-link {
+.bar-pct {
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.bar-btn, .bar-link {
   background: none;
   border: none;
   cursor: pointer;
+  color: var(--accent);
   -webkit-tap-highlight-color: transparent;
 }
-
 .bar-btn {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   line-height: 1;
-  color: var(--accent);
-  padding: 0.25rem 0.35rem;
+  padding: 0.3rem 0.35rem;
 }
-
 .bar-link {
-  font-family: var(--ui);
-  font-size: 0.85rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
   color: var(--muted);
-  padding: 0.25rem 0;
+  padding: 0.3rem 0;
 }
-
-.progress {
-  height: 2px;
-  width: 0;
-  background: var(--accent);
-  opacity: 0.5;
-  transition: width 0.3s ease;
-}
-
-.content {
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  padding: 1rem 1.5rem 0.5rem;
-  font-size: 1.18rem;
-  line-height: 1.62;
-}
-
-.content.reading {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-}
-
-.content.report {
-  overflow-y: auto;
-  font-family: var(--ui);
-}
-
-.hint {
-  text-align: center;
-  font-family: var(--ui);
-  font-size: 0.78rem;
-  color: var(--muted);
-  padding: 0.6rem 1.5rem calc(0.9rem + env(safe-area-inset-bottom));
-}
-
-.sentinel { height: 1px; }
-
-.book-end {
-  text-align: center;
-  color: var(--muted);
-  font-family: var(--ui);
-  font-size: 0.8rem;
-  letter-spacing: 0.15em;
-  padding: 1.5rem 0 2.5rem;
-}
-
-/* discovery vs reading distinction */
 .mode-pill {
-  font-family: var(--ui);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--accent);
-  border: 1px solid var(--accent);
-  border-radius: 999px;
-  padding: 0.15rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 0.22rem 0.5rem;
   white-space: nowrap;
 }
 
+/* hairline progress (reading only) */
+.progress {
+  height: 1.5px;
+  width: 0;
+  background: var(--accent);
+  margin: 0 1.25rem;
+  transition: width 0.3s ease;
+}
+
+/* ── content ── */
+.content {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  font-size: 1.2rem;
+  line-height: 1.72;
+}
+.para {
+  margin: 0 0 1.05em;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* DISCOVERY — a pressed specimen card */
 .screen.discover .content {
-  margin: 0.5rem 1.1rem;
-  padding: 1.4rem 1.4rem;
+  margin: 0.4rem 1.1rem 0.2rem;
+  padding: 1.6rem 1.5rem 1.4rem;
   background: var(--card);
   border: 1px solid var(--rule);
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  border-radius: 3px;
+  box-shadow: 0 1px 0 var(--rule), 0 14px 30px -18px rgba(0, 0, 0, 0.45);
+  position: relative;
+}
+.screen.discover .content::after {
+  content: '\2767'; /* rotated floral heart — printer's leaf */
+  position: absolute;
+  right: 1rem;
+  bottom: 0.7rem;
+  font-size: 1.1rem;
+  color: var(--accent);
+  opacity: 0.4;
 }
 
-/* theme picker + settings */
-.content.settings {
+/* READING — full bleed */
+.content.reading {
   overflow-y: auto;
-  font-family: var(--ui);
+  -webkit-overflow-scrolling: touch;
+  padding: 0.6rem 1.5rem calc(2rem + env(safe-area-inset-bottom));
 }
+.content.reading .para:first-of-type { margin-top: 0.4rem; }
 
-.sec {
-  font-family: var(--ui);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+.hint {
+  text-align: center;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
-  margin: 1.25rem 0 0.6rem;
+  padding: 0.5rem 1.5rem calc(1rem + env(safe-area-inset-bottom));
+}
+.sentinel { height: 1px; }
+.book-end {
+  text-align: center;
+  font-size: 0.66rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 1.4rem 0 2.2rem;
 }
 
-.themes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+.empty {
+  margin: 24vh auto 0;
+  max-width: 22rem;
+  text-align: center;
+  font-family: var(--label);
+  font-size: 0.8rem;
+  line-height: 1.9;
+  letter-spacing: 0.03em;
+  color: var(--muted);
 }
 
+/* ── settings (themes + progress) ── */
+.content.settings { overflow-y: auto; padding: 0.4rem 1.5rem 2rem; }
+.sec {
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 1.6rem 0 0.7rem;
+}
+.themes { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .theme-chip {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.45rem 0.8rem 0.45rem 0.5rem;
+  padding: 0.4rem 0.75rem 0.4rem 0.45rem;
   border: 1px solid var(--rule);
-  border-radius: 999px;
+  border-radius: 2px;
   background: transparent;
   color: var(--ink);
-  font-family: var(--ui);
-  font-size: 0.9rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-
 .theme-chip.active {
   border-color: var(--accent);
   box-shadow: inset 0 0 0 1px var(--accent);
 }
-
 .theme-chip .sw {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.18);
 }
-
-.report-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
+.report-list { list-style: none; margin: 0; padding: 0; }
 .report-row {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  padding: 0.9rem 0;
+  gap: 0.25rem;
+  padding: 0.85rem 0;
   border-top: 1px solid var(--rule);
 }
-
-.report-title {
-  font-family: var(--reading);
-  font-size: 1.1rem;
-}
-
-.report-stat {
-  font-size: 0.82rem;
-  color: var(--muted);
-}
-
-.para {
-  margin: 0 0 1em;
-}
-
-.empty {
-  margin: 22vh auto 0;
-  text-align: center;
-  font-family: var(--ui);
-  font-size: 0.95rem;
-  color: var(--muted);
-  line-height: 1.6;
-  max-width: 22rem;
-}
+.report-title { font-family: var(--reading); font-size: 1.1rem; }
+.report-stat { font-size: 0.7rem; letter-spacing: 0.04em; color: var(--muted); }

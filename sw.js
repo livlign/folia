@@ -1,4 +1,4 @@
-const CACHE = 'folia-shell-v5';
+const CACHE = 'folia-shell-v6';
 const SHELL = [
   './',
   './index.html',
@@ -14,6 +14,10 @@ const SHELL = [
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
+  './fonts/newsreader-latin.woff2',
+  './fonts/newsreader-latin-ext.woff2',
+  './fonts/newsreader-vietnamese.woff2',
+  './fonts/splinemono-latin.woff2',
 ];
 
 self.addEventListener('install', (event) => {
