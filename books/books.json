@@ -1,0 +1,84 @@
+{
+  "books": [
+    {
+      "id": "10-bai-hoc-tren-chiec-khan-an",
+      "title": "10 Bài Học Trên Chiếc Khăn Ăn",
+      "paragraphCount": 680
+    },
+    {
+      "id": "an-elegant-puzzle",
+      "title": "An Elegant Puzzle",
+      "paragraphCount": 2816
+    },
+    {
+      "id": "are-your-lights-on",
+      "title": "Are Your Lights On?",
+      "paragraphCount": 717
+    },
+    {
+      "id": "coders-at-work",
+      "title": "Coders at Work",
+      "paragraphCount": 5289
+    },
+    {
+      "id": "designing-data-intensive-applications",
+      "title": "Designing Data-Intensive Applications",
+      "paragraphCount": 5701
+    },
+    {
+      "id": "dont-make-me-think",
+      "title": "Don't Make Me Think, Revisited",
+      "paragraphCount": 1378
+    },
+    {
+      "id": "gian-diep-mang",
+      "title": "Gián Điệp Mạng",
+      "paragraphCount": 4444
+    },
+    {
+      "id": "ky-nang-lanh-dao-hieu-qua",
+      "title": "Kỹ Năng Lãnh Đạo Hiệu Quả",
+      "paragraphCount": 1422
+    },
+    {
+      "id": "lam-sep",
+      "title": "Làm Sếp",
+      "paragraphCount": 1622
+    },
+    {
+      "id": "suc-manh-cua-nhung-con-so",
+      "title": "Sức Mạnh Của Những Con Số",
+      "paragraphCount": 1345
+    },
+    {
+      "id": "the-pragmatic-programmer",
+      "title": "The Pragmatic Programmer",
+      "paragraphCount": 4221
+    },
+    {
+      "id": "thiet-ke-lay-nguoi-dung",
+      "title": "Thiết Kế Lấy Người Dùng Làm Trung Tâm",
+      "paragraphCount": 1743
+    },
+    {
+      "id": "thoi-quen-nguyen-tu",
+      "title": "Thói Quen Nguyên Tử",
+      "paragraphCount": 830
+    },
+    {
+      "id": "triz-for-dummies",
+      "title": "TRIZ For Dummies",
+      "paragraphCount": 3168
+    },
+    {
+      "id": "user-story-mapping",
+      "title": "User Story Mapping",
+      "paragraphCount": 2646
+    },
+    {
+      "id": "y-tuong-ky-quac",
+      "title": "Ý Tưởng Kỳ Quặc Tạo Ra Sự Đột Phá",
+      "paragraphCount": 827
+    }
+  ]
+}
