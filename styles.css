@@ -131,6 +131,14 @@ body {
   font-family: var(--ui);
 }
 
+.hint {
+  text-align: center;
+  font-family: var(--ui);
+  font-size: 0.78rem;
+  color: var(--muted);
+  padding: 0.6rem 1.5rem calc(0.9rem + env(safe-area-inset-bottom));
+}
+
 .sentinel { height: 1px; }
 
 .book-end {
