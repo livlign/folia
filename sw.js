@@ -1,4 +1,4 @@
-const CACHE = 'folia-shell-v16';
+const CACHE = 'folia-shell-v17';
 const SHELL = [
   './',
   './index.html',
@@ -16,7 +16,6 @@ const SHELL = [
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './icons/maskable-192.png',
   './icons/maskable-512.png',
   './icons/favicon.svg',
   './icons/favicon-32.png',

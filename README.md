@@ -43,11 +43,24 @@ library — the gate is what protects the comfort bar against badly-reflowing PD
 
 ## Reader
 
-The reader is buildless — no install step. Deploy by committing these files to a
-public `folia` repo and enabling GitHub Pages from `main` root. It then serves
-itself at `https://<user>.github.io/folia/`, syncs `books/` into IndexedDB, and
-runs fully offline after the first load. Open it on Android and *Add to Home
-screen* to put it in the reflex slot.
+The reader is buildless — no install step. The manifest uses relative paths, so
+it works correctly whether served from a domain root or a subpath.
+
+**Deploy (Cloudflare Pages, served at a root origin):**
+
+```sh
+npx wrangler login        # once
+npm run deploy            # wrangler pages deploy . --project-name=folia
+```
+
+`.assetsignore` keeps `cli/`, `tests/`, and docs out of the upload. A root
+origin (e.g. `folia.pages.dev`) is what makes the PWA reliably installable on
+Android — WebAPK minting is flaky for PWAs served from a shared-host **subpath**
+like `https://<user>.github.io/folia/`, so prefer the root origin for install.
+GitHub Pages still works for browsing.
+
+Open it on Android and use Chrome's *Install app* to put it in the reflex slot;
+it syncs `books/` into IndexedDB and runs fully offline after first load.
 
 To run locally, serve the repo root over HTTP (a service worker and ES modules
 need a real origin, not `file://`):
