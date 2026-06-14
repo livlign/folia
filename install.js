@@ -20,6 +20,8 @@ window.addEventListener('appinstalled', () => {
 
 export function canInstall() { return !!deferred && !installed; }
 
+export function isInstalled() { return installed; }
+
 export function isStandalone() {
   return window.matchMedia('(display-mode: standalone)').matches
     || window.navigator.standalone === true;

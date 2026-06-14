@@ -3,7 +3,7 @@ import { pickDiscovery } from './discovery.js';
 import { buildReport } from './report.js';
 import { THEMES, getTheme, setTheme } from './theme.js';
 import { FONTS, WEIGHTS, STYLES, SIZES, getType, setType } from './typography.js';
-import { canInstall, isStandalone, promptInstall } from './install.js';
+import { canInstall, isStandalone, isInstalled, promptInstall, onChange } from './install.js';
 
 const CHUNK = 16; // paragraphs appended per scroll load-more while reading
 
@@ -164,13 +164,27 @@ export function createLoop(ctx) {
     if (isStandalone()) {
       wrap.append(el('p', { className: 'install-note' }, 'Folia is installed — open it from your home screen.'));
     } else if (canInstall()) {
-      const status = el('span', { className: 'install-note' });
+      const status = el('p', { className: 'install-note' });
       const btn = el('button', { className: 'install-btn', type: 'button' }, 'Install Folia');
       btn.onclick = async () => {
         btn.disabled = true;
         const outcome = await promptInstall();
-        if (outcome === 'accepted') { btn.remove(); status.textContent = 'Installing… check your home screen.'; }
-        else { btn.disabled = false; status.textContent = outcome === 'dismissed' ? 'Install dismissed.' : ''; }
+        if (outcome !== 'accepted') { btn.disabled = false; status.textContent = outcome === 'dismissed' ? 'Install dismissed.' : ''; return; }
+        btn.remove();
+        status.textContent = 'Installing…';
+        // The browser accepted; Android now mints the app. Confirm via the
+        // appinstalled event, or surface device-side help if it never lands.
+        let settled = false;
+        const off = onChange(() => {
+          if (!isInstalled()) return;
+          settled = true; off();
+          status.textContent = 'Installed ✓ — find Folia on your home screen or app drawer.';
+        });
+        setTimeout(() => {
+          if (settled) return;
+          off();
+          status.textContent = "Still not installed? Your device is blocking the final step. Check that Google Play Services and the Play Store are enabled and updated, that you have free storage and no VPN/firewall, and that your launcher allows home-screen shortcuts (Settings → Apps → Chrome → permissions). Then try again, or use Chrome menu ⋮ → Install app.";
+        }, 12000);
       };
       wrap.append(btn, status);
     } else {
