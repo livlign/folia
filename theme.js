@@ -1,9 +1,14 @@
+// `swatch` = the surface colour shown in the picker chip; keep in sync with the
+// matching [data-theme] block in styles.css (single visual identity per theme).
 export const THEMES = [
-  { id: 'paper', name: 'Paper', paper: '#f4efe6', accent: '#2f4f3e' },
-  { id: 'light', name: 'Light', paper: '#ffffff', accent: '#2f6f54' },
-  { id: 'sepia', name: 'Sepia', paper: '#f4ecd8', accent: '#8a5a2b' },
-  { id: 'dark', name: 'Dark', paper: '#15140f', accent: '#9cc4ad' },
-  { id: 'vintage', name: 'Vintage', paper: '#e7dabd', accent: '#8c4a2f' },
+  { id: 'paper', name: 'Paper', swatch: '#f7f1e3', accent: '#4a5d3a' },
+  { id: 'light', name: 'Light', swatch: '#ffffff', accent: '#2f7d5b' },
+  { id: 'sage', name: 'Sage', swatch: '#f1f5ee', accent: '#43694a' },
+  { id: 'sepia', name: 'Sepia', swatch: '#f5ecd6', accent: '#9a5b25' },
+  { id: 'vintage', name: 'Vintage', swatch: '#e7dbbd', accent: '#93472a' },
+  { id: 'dusk', name: 'Dusk', swatch: '#222831', accent: '#8fb9d8' },
+  { id: 'forest', name: 'Forest', swatch: '#1c2a22', accent: '#ceaa6a' },
+  { id: 'night', name: 'Night', swatch: '#161613', accent: '#9ec79a' },
 ];
 
 const KEY = 'folia-theme';

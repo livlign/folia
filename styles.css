@@ -26,21 +26,35 @@
   --paper: #efe7d6; --card: #f7f1e3; --ink: #2c271d; --muted: #8c7f66; --accent: #4a5d3a; --rule: #d8ccb4;
 }
 :root[data-theme="light"] {
-  --paper: #f6f5f2; --card: #ffffff; --ink: #211f1c; --muted: #8d877c; --accent: #3a6b4f; --rule: #e4e0d7;
+  --paper: #fafafa; --card: #ffffff; --ink: #1b1c1e; --muted: #9a9aa0; --accent: #2f7d5b; --rule: #ececee;
+}
+:root[data-theme="sage"] {
+  --paper: #e6ece3; --card: #f1f5ee; --ink: #28302a; --muted: #7e8c7c; --accent: #43694a; --rule: #cdd7c8;
 }
 :root[data-theme="sepia"] {
   --paper: #ece0c6; --card: #f5ecd6; --ink: #4b3b29; --muted: #9c8763; --accent: #9a5b25; --rule: #ddccaa;
 }
-:root[data-theme="dark"] {
-  --paper: #16140f; --card: #1f1c16; --ink: #e6ddca; --muted: #8a8170; --accent: #a8c39a; --rule: #322d24;
-}
 :root[data-theme="vintage"] {
   --paper: #ddcfac; --card: #e7dbbd; --ink: #3f3322; --muted: #84714e; --accent: #93472a; --rule: #c7b790;
+}
+:root[data-theme="dusk"] {
+  --paper: #1a1e24; --card: #222831; --ink: #d6dce4; --muted: #828d9c; --accent: #8fb9d8; --rule: #2f3743;
+}
+:root[data-theme="forest"] {
+  --paper: #13201a; --card: #1c2a22; --ink: #dde6da; --muted: #7e9283; --accent: #ceaa6a; --rule: #27372e;
+}
+:root[data-theme="night"] {
+  --paper: #0d0d0c; --card: #161613; --ink: #e7e2d6; --muted: #7e7a6e; --accent: #9ec79a; --rule: #242220;
 }
 
 :root {
   --reading: 'Newsreader', Georgia, 'Times New Roman', serif;
   --label: 'Spline Sans Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  /* reading-text typography (user-adjustable; see typography.js) */
+  --body-font: var(--reading);
+  --body-weight: 400;
+  --body-style: normal;
+  --body-size: 1.2rem;
 }
 
 * { box-sizing: border-box; }
@@ -187,6 +201,10 @@ body::before {
 }
 .para {
   margin: 0 0 1.05em;
+  font-family: var(--body-font);
+  font-weight: var(--body-weight);
+  font-style: var(--body-style);
+  font-size: var(--body-size);
   overflow-wrap: break-word;
   word-break: break-word;
   hyphens: auto;
@@ -283,6 +301,37 @@ body::before {
   height: 16px;
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+/* font / weight / style choosers */
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.chip.active {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.type-preview {
+  margin: 1rem 0 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--card);
+  font-family: var(--body-font);
+  font-weight: var(--body-weight);
+  font-style: var(--body-style);
+  font-size: var(--body-size);
+  line-height: 1.7;
+  color: var(--ink);
 }
 .report-list { list-style: none; margin: 0; padding: 0; }
 .report-row {

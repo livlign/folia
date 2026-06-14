@@ -1,4 +1,4 @@
-const CACHE = 'folia-shell-v7';
+const CACHE = 'folia-shell-v10';
 const SHELL = [
   './',
   './index.html',
@@ -10,10 +10,14 @@ const SHELL = [
   './reader.js',
   './report.js',
   './theme.js',
+  './typography.js',
   './styles.css',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
+  './icons/favicon.svg',
+  './icons/favicon-32.png',
+  './icons/favicon-16.png',
   './fonts/newsreader-latin.woff2',
   './fonts/newsreader-latin-ext.woff2',
   './fonts/newsreader-vietnamese.woff2',

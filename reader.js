@@ -2,6 +2,7 @@ import { fill, domMeasurer } from './pagination.js';
 import { pickDiscovery } from './discovery.js';
 import { buildReport } from './report.js';
 import { THEMES, getTheme, setTheme } from './theme.js';
+import { FONTS, WEIGHTS, STYLES, SIZES, getType, setType } from './typography.js';
 
 const CHUNK = 16; // paragraphs appended per scroll load-more while reading
 
@@ -76,7 +77,7 @@ export function createLoop(ctx) {
       c.classList.toggle('active', c.dataset.theme === getTheme()));
     THEMES.forEach((t) => {
       const swatch = el('span', { className: 'sw' });
-      swatch.style.background = `linear-gradient(135deg, ${t.paper} 0 50%, ${t.accent} 50% 100%)`;
+      swatch.style.background = `linear-gradient(135deg, ${t.swatch} 0 50%, ${t.accent} 50% 100%)`;
       const chip = el('button', { className: 'theme-chip',
         onclick: () => { setTheme(t.id); sync(); } }, [swatch, el('span', {}, t.name)]);
       chip.dataset.theme = t.id;
@@ -86,6 +87,38 @@ export function createLoop(ctx) {
     return wrap;
   }
 
+  // shared chooser for font / weight / style; `face` renders each chip in its own typeface
+  function chipGroup(items, current, onPick, { face } = {}) {
+    const wrap = el('div', { className: 'chips' });
+    const sync = () => wrap.querySelectorAll('.chip').forEach((c) =>
+      c.classList.toggle('active', c.dataset.id === current()));
+    items.forEach((it) => {
+      const chip = el('button', { className: 'chip',
+        onclick: () => { onPick(it.id); sync(); } }, it.name);
+      chip.dataset.id = it.id;
+      if (face) chip.style.fontFamily = it.stack;
+      wrap.append(chip);
+    });
+    sync();
+    return wrap;
+  }
+
+  function typeControls() {
+    const preview = el('p', { className: 'type-preview' },
+      'A leaf, read one page at a time, then carried off by the wind.');
+    return [
+      el('h2', { className: 'sec' }, 'Reading font'),
+      chipGroup(FONTS, () => getType().font, (id) => setType({ font: id }), { face: true }),
+      el('h2', { className: 'sec' }, 'Weight'),
+      chipGroup(WEIGHTS, () => getType().weight, (id) => setType({ weight: id })),
+      el('h2', { className: 'sec' }, 'Style'),
+      chipGroup(STYLES, () => getType().style, (id) => setType({ style: id })),
+      el('h2', { className: 'sec' }, 'Size'),
+      chipGroup(SIZES, () => getType().size, (id) => setType({ size: id })),
+      preview,
+    ];
+  }
+
   function renderSettings() {
     const bar = el('header', { className: 'bar' }, [
       el('span', { className: 'wordmark' }, 'Folia'),
@@ -93,6 +126,7 @@ export function createLoop(ctx) {
     ]);
     const content = el('section', { className: 'content settings' });
     content.append(el('h2', { className: 'sec' }, 'Theme'), themePicker());
+    content.append(...typeControls());
     content.append(el('h2', { className: 'sec' }, 'Progress'));
     const list = el('ul', { className: 'report-list' });
     const rows = buildReport(ctx.books, ctx.seenMap, ctx.commits);

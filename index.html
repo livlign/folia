@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f4efe6">
   <title>Folia</title>
-  <script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('folia-theme')||'paper');}catch(e){}</script>
+  <script>try{var d=document.documentElement,L=localStorage;d.setAttribute('data-theme',L.getItem('folia-theme')||'paper');var F={newsreader:"'Newsreader',Georgia,serif",georgia:"Georgia,serif",palatino:"'Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif",sans:"system-ui,-apple-system,'Segoe UI',Roboto,sans-serif",mono:"'Spline Sans Mono',ui-monospace,monospace"},W={medium:'500',semibold:'600'},Z={small:'1.05rem',large:'1.35rem',xlarge:'1.55rem'},f=L.getItem('folia-font'),w=L.getItem('folia-weight'),s=L.getItem('folia-style'),z=L.getItem('folia-size');if(F[f])d.style.setProperty('--body-font',F[f]);if(W[w])d.style.setProperty('--body-weight',W[w]);if(s==='italic')d.style.setProperty('--body-style','italic');if(Z[z])d.style.setProperty('--body-size',Z[z]);}catch(e){}</script>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="preload" as="font" type="font/woff2" href="fonts/newsreader-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="fonts/newsreader-vietnamese.woff2" crossorigin>

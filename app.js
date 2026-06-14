@@ -2,6 +2,7 @@ import * as store from './store.js';
 import { HttpSource } from './source.js';
 import { createLoop } from './reader.js';
 import { applyTheme, getTheme } from './theme.js';
+import { applyType } from './typography.js';
 
 const app = () => document.getElementById('app');
 
@@ -53,6 +54,7 @@ function registerServiceWorker() {
 async function boot() {
   registerServiceWorker();
   applyTheme(getTheme());
+  applyType();
   await sync(await getSource());
   const books = await store.getAllBooks();
   const seenMap = await loadMap(books, store.getSeen);

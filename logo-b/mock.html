@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face {
+    font-family: 'Newsreader';
+    src: url('../fonts/newsreader-latin.woff2') format('woff2');
+    font-weight: 400 600;
+  }
+  :root {
+    --paper: #2b2a25;
+    --card: #f4ecd9;          /* warm herbarium paper */
+    --green: #3c5236;         /* deep botanical green */
+    --green-deep: #33472d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #1f1e1a; color: #cfc9ba;
+    font-family: 'Newsreader', Georgia, serif;
+    padding: 44px 52px 60px;
+  }
+  h2 { font-size: 15px; font-weight: 600; letter-spacing: .02em; margin: 0 0 18px; color: #e7e0cf; }
+  .section { margin-bottom: 46px; }
+  .row { display: flex; gap: 28px; align-items: flex-end; flex-wrap: wrap; }
+  .item { text-align: center; }
+  .cap { margin-top: 10px; font-size: 12px; color: #9a9381; font-family: ui-monospace, monospace; }
+
+  /* iOS-style rounded tile */
+  .tile {
+    display: grid; place-items: center;
+    border-radius: 22.5%;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+  .tile svg { width: 64%; height: 64%; display: block; }
+
+  .paper { background: var(--card); }
+  /* subtle laid-paper warmth */
+  .paper.tex {
+    background:
+      radial-gradient(120% 120% at 30% 10%, #faf4e6 0%, #f1e8d2 60%, #e8dcc0 100%);
+  }
+  .green {
+    background: linear-gradient(160deg, #44593b 0%, #364a2f 55%, #2e3f28 100%);
+  }
+</style>
+</head>
+<body>
+
+<div class="section">
+  <h2>On a home screen</h2>
+  <div class="row">
+    <div class="item">
+      <div class="tile paper tex" style="width:180px;height:180px"><div id="leaf-a"></div></div>
+      <div class="cap">Folia · paper</div>
+    </div>
+    <div class="item">
+      <div class="tile green" style="width:180px;height:180px"><div id="leaf-b"></div></div>
+      <div class="cap">Folia · green</div>
+    </div>
+    <div class="item">
+      <div class="tile paper tex" style="width:120px;height:120px"><div id="leaf-c"></div></div>
+      <div class="cap">120</div>
+    </div>
+    <div class="item">
+      <div class="tile green" style="width:88px;height:88px"><div id="leaf-d"></div></div>
+      <div class="cap">88</div>
+    </div>
+    <div class="item">
+      <div class="tile paper" style="width:56px;height:56px"><div id="leaf-e"></div></div>
+      <div class="cap">56</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Detail · herbarium specimen, refined</h2>
+  <div class="row">
+    <div class="item">
+      <div class="tile paper tex" style="width:260px;height:260px"><div id="leaf-big"></div></div>
+      <div class="cap">B — line on paper</div>
+    </div>
+    <div class="item">
+      <div class="tile green" style="width:260px;height:260px"><div id="leaf-biginv"></div></div>
+      <div class="cap">B — reversed</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Elegant lanceolate herbarium leaf, drawn once, recolored per tile ──
+function leaf(stroke) {
+  return `
+  <svg viewBox="0 0 200 200" fill="none"
+       stroke="${stroke}" stroke-linecap="round" stroke-linejoin="round">
+    <!-- silhouette: tapered lanceolate, drawn pointed tip -> base -> tip -->
+    <path d="M100 22
+             C 116 46, 139 78, 143 108
+             C 145 138, 124 160, 100 168
+             C 76 160, 55 138, 57 108
+             C 61 78, 84 46, 100 22 Z" stroke-width="4.4"/>
+    <!-- midrib + petiole -->
+    <path d="M100 30 C 100 84, 100 134, 100 168
+             C 100 175, 100 181, 100 188" stroke-width="4.2"/>
+    <!-- lateral veins: gentle arc out of midrib, then sweep toward the tip -->
+    <g stroke-width="2.4">
+      <path d="M100 64  C 107 60, 114 55, 121 47"/>
+      <path d="M100 64  C 93 60, 86 55, 79 47"/>
+      <path d="M100 86  C 111 81, 122 75, 130 64"/>
+      <path d="M100 86  C 89 81, 78 75, 70 64"/>
+      <path d="M100 110 C 114 104, 128 97, 137 85"/>
+      <path d="M100 110 C 86 104, 72 97, 63 85"/>
+      <path d="M100 134 C 113 129, 126 122, 133 110"/>
+      <path d="M100 134 C 87 129, 74 122, 67 110"/>
+      <path d="M100 154 C 109 150, 118 145, 124 136"/>
+      <path d="M100 154 C 91 150, 82 145, 76 136"/>
+    </g>
+  </svg>`;
+}
+const GREEN = '#33472d', CREAM = '#f4ecd9';
+for (const id of ['leaf-a','leaf-c','leaf-e','leaf-big']) document.getElementById(id).innerHTML = leaf(GREEN);
+for (const id of ['leaf-b','leaf-d','leaf-biginv']) document.getElementById(id).innerHTML = leaf(CREAM);
+</script>
+</body>
+</html>

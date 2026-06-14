@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#1f1e1a;color:#cfc9ba;font-family:ui-monospace,monospace;padding:40px 52px 60px}
+  h2{font-size:14px;color:#e7e0cf;margin:0 0 18px;font-weight:600}
+  .row{display:flex;gap:30px;align-items:flex-end;flex-wrap:wrap;margin-bottom:46px}
+  .item{text-align:center}
+  .cap{margin-top:10px;font-size:12px;color:#9a9381}
+  .tile{display:grid;place-items:center;border-radius:22.5%;overflow:hidden;
+        box-shadow:0 10px 30px rgba(0,0,0,.45)}
+  .tile svg{width:76%;height:76%;display:block}
+  .paper{background:radial-gradient(120% 120% at 30% 10%,#faf4e6 0%,#f1e8d2 60%,#e8dcc0 100%)}
+  .green{background:linear-gradient(160deg,#44593b 0%,#364a2f 55%,#2e3f28 100%)}
+</style></head>
+<body>
+<h2>Open-gesture falling leaf · deliberate & elegant</h2>
+<div class="row">
+  <div class="item"><div class="tile paper" style="width:230px;height:230px" id="a"></div><div class="cap">A · tilt 42°</div></div>
+  <div class="item"><div class="tile green" style="width:230px;height:230px" id="b"></div><div class="cap">A · reversed</div></div>
+  <div class="item"><div class="tile paper" style="width:230px;height:230px" id="c"></div><div class="cap">B · tilt 50° / more curve</div></div>
+</div>
+<h2>At icon sizes</h2>
+<div class="row">
+  <div class="item"><div class="tile paper" style="width:120px;height:120px" id="s1"></div><div class="cap">120</div></div>
+  <div class="item"><div class="tile green" style="width:88px;height:88px" id="s2"></div><div class="cap">88</div></div>
+  <div class="item"><div class="tile paper" style="width:56px;height:56px" id="s3"></div><div class="cap">56</div></div>
+</div>
+
+<script>
+// One leaf, drawn as a single open gesture: the blade is one unclosed stroke
+// (a deliberate gap at the base), the midrib + petiole a second flowing line.
+function leafGlyph(stroke, {rot=-42, curve=0} = {}){
+  // windblown, single open gesture. blade = one unclosed stroke with an open
+  // mouth at the base; rib = a flowing line that overshoots past the tip.
+  const blade = curve
+    ? "M80 160 C 46 114, 64 52, 114 32 C 150 58, 144 122, 100 154"
+    : "M84 158 C 54 116, 66 58, 110 36 C 144 60, 140 120, 102 152";
+  const rib = curve
+    ? "M86 184 C 94 166, 98 136, 101 112 C 104 88, 109 70, 113 56"
+    : "M90 182 C 96 166, 99 138, 101 114 C 103 90, 107 70, 110 54";
+  return `
+  <svg viewBox="0 0 200 200" fill="none" stroke="${stroke}"
+       stroke-linecap="round" stroke-linejoin="round">
+    <g transform="rotate(${rot} 100 100)">
+      <path d="${blade}" stroke-width="4.8"/>
+      <path d="${rib}" stroke-width="3.8"/>
+    </g>
+  </svg>`;
+}
+const G='#33472d', C='#f4ecd9';
+a.innerHTML  = leafGlyph(G,{rot:-44});
+b.innerHTML  = leafGlyph(C,{rot:-44});
+c.innerHTML  = leafGlyph(G,{rot:-52,curve:1});
+s1.innerHTML = leafGlyph(G,{rot:-44});
+s2.innerHTML = leafGlyph(C,{rot:-44});
+s3.innerHTML = leafGlyph(G,{rot:-44});
+</script>
+</body></html>
