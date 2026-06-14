@@ -65,7 +65,7 @@ async function boot() {
     seenMap,
     commits,
     rng: Math.random,
-    persist: { markSeen: store.markSeen, incCommit: store.incCommit },
+    persist: { markSeen: store.markSeen, incCommit: store.incCommit, clearProgress: store.clearProgress },
   });
   loop.start();
 }

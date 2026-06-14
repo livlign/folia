@@ -71,3 +71,10 @@ export async function incCommit(bookId) {
   await setCommits(bookId, n);
   return n;
 }
+
+// Wipes all reading progress (seen paragraphs + read counts). Leaves the
+// cached library and config (theme/typography) untouched.
+export async function clearProgress() {
+  await withStore('seen', 'readwrite', (s) => reqAsync(s.clear()));
+  await withStore('commits', 'readwrite', (s) => reqAsync(s.clear()));
+}

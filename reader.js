@@ -119,6 +119,45 @@ export function createLoop(ctx) {
     ];
   }
 
+  // Wipe persisted progress, then mirror the reset into the in-memory state so
+  // the report and discovery reflect it without a reload. Cancels any pending
+  // seen-flush so it can't re-write cleared ids.
+  async function resetProgress() {
+    if (flushTimer) { clearTimeout(flushTimer); flushTimer = null; }
+    pending = new Set();
+    pendingBook = null;
+    await ctx.persist.clearProgress();
+    ctx.seenMap.clear();
+    ctx.commits.clear();
+  }
+
+  function resetSection() {
+    const wrap = el('div', { className: 'danger' });
+    const arm = el('button', { className: 'danger-btn', type: 'button' }, 'Reset reading progress');
+    arm.onclick = () => wrap.replaceChildren(confirmPanel(wrap));
+    wrap.append(arm);
+    return wrap;
+  }
+
+  function confirmPanel(wrap) {
+    const WORD = 'RESET';
+    const msg = el('p', { className: 'danger-msg' },
+      `This permanently erases every book's read progress and counts. It can't be undone. Type ${WORD} to confirm.`);
+    const input = el('input', { className: 'danger-input', type: 'text',
+      placeholder: WORD, autocapitalize: 'characters', autocorrect: 'off', spellcheck: false });
+    const go = el('button', { className: 'danger-btn', type: 'button', disabled: true }, 'Erase');
+    const cancel = el('button', { className: 'bar-link', type: 'button',
+      onclick: () => wrap.replaceChildren(resetSection().firstChild) }, 'Cancel');
+    input.oninput = () => { go.disabled = input.value.trim().toUpperCase() !== WORD; };
+    go.onclick = async () => {
+      go.disabled = true; go.textContent = 'Erasing…';
+      await resetProgress();
+      renderSettings();
+    };
+    requestAnimationFrame(() => input.focus());
+    return el('div', { className: 'danger-confirm' }, [msg, el('div', { className: 'danger-row' }, [input, go, cancel])]);
+  }
+
   function renderSettings() {
     const bar = el('header', { className: 'bar' }, [
       el('span', { className: 'wordmark' }, 'Folia'),
@@ -138,6 +177,7 @@ export function createLoop(ctx) {
       ]));
     }
     content.append(list);
+    content.append(el('h2', { className: 'sec' }, 'Reset'), resetSection());
     mountScreen(el('div', { className: 'screen' }, [bar, content]));
   }
   function openSettings() { history.pushState({ view: 'settings' }, ''); transitionTo(renderSettings); }

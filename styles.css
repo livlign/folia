@@ -333,6 +333,43 @@ body::before {
   line-height: 1.7;
   color: var(--ink);
 }
+/* danger zone — typed-confirm progress reset */
+.danger { --danger: #c0563f; }
+.danger-btn {
+  font-family: var(--label);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--danger);
+  background: transparent;
+  border: 1px solid var(--danger);
+  border-radius: 2px;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.danger-btn:disabled { opacity: 0.4; cursor: default; }
+.danger-msg {
+  font-family: var(--label);
+  font-size: 0.74rem;
+  line-height: 1.75;
+  color: var(--ink);
+  margin: 0 0 0.75rem;
+}
+.danger-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.danger-input {
+  font-family: var(--label);
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  width: 7rem;
+  padding: 0.45rem 0.6rem;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+.danger-input:focus { outline: none; border-color: var(--danger); }
+
 .report-list { list-style: none; margin: 0; padding: 0; }
 .report-row {
   display: flex;
