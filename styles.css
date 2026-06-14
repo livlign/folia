@@ -333,6 +333,29 @@ body::before {
   line-height: 1.7;
   color: var(--ink);
 }
+/* install prompt */
+.install { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
+.install-btn {
+  font-family: var(--label);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--paper);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.install-btn:disabled { opacity: 0.5; cursor: default; }
+.install-note {
+  margin: 0;
+  font-family: var(--label);
+  font-size: 0.72rem;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
 /* danger zone — typed-confirm progress reset */
 .danger { --danger: #c0563f; }
 .danger-btn {

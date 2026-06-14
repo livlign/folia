@@ -1,4 +1,4 @@
-const CACHE = 'folia-shell-v12';
+const CACHE = 'folia-shell-v13';
 const SHELL = [
   './',
   './index.html',
@@ -11,6 +11,7 @@ const SHELL = [
   './report.js',
   './theme.js',
   './typography.js',
+  './install.js',
   './styles.css',
   './manifest.webmanifest',
   './icons/icon-192.png',
@@ -26,8 +27,14 @@ const SHELL = [
   './fonts/splinemono-latin.woff2',
 ];
 
+// Cache each asset independently so a single failed fetch can't abort the whole
+// install (which would leave the page uncontrolled and break installability).
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil(
+    caches.open(CACHE)
+      .then((c) => Promise.allSettled(SHELL.map((u) => c.add(u))))
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', (event) => {

@@ -3,6 +3,7 @@ import { HttpSource } from './source.js';
 import { createLoop } from './reader.js';
 import { applyTheme, getTheme } from './theme.js';
 import { applyType } from './typography.js';
+import './install.js'; // registers the install-prompt listener at startup
 
 const app = () => document.getElementById('app');
 

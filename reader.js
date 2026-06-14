@@ -3,6 +3,7 @@ import { pickDiscovery } from './discovery.js';
 import { buildReport } from './report.js';
 import { THEMES, getTheme, setTheme } from './theme.js';
 import { FONTS, WEIGHTS, STYLES, SIZES, getType, setType } from './typography.js';
+import { canInstall, isStandalone, promptInstall } from './install.js';
 
 const CHUNK = 16; // paragraphs appended per scroll load-more while reading
 
@@ -158,12 +159,34 @@ export function createLoop(ctx) {
     return el('div', { className: 'danger-confirm' }, [msg, el('div', { className: 'danger-row' }, [input, go, cancel])]);
   }
 
+  function installSection() {
+    const wrap = el('div', { className: 'install' });
+    if (isStandalone()) {
+      wrap.append(el('p', { className: 'install-note' }, 'Folia is installed — open it from your home screen.'));
+    } else if (canInstall()) {
+      const status = el('span', { className: 'install-note' });
+      const btn = el('button', { className: 'install-btn', type: 'button' }, 'Install Folia');
+      btn.onclick = async () => {
+        btn.disabled = true;
+        const outcome = await promptInstall();
+        if (outcome === 'accepted') { btn.remove(); status.textContent = 'Installing… check your home screen.'; }
+        else { btn.disabled = false; status.textContent = outcome === 'dismissed' ? 'Install dismissed.' : ''; }
+      };
+      wrap.append(btn, status);
+    } else {
+      wrap.append(el('p', { className: 'install-note' },
+        'To install, open Folia in Chrome and choose menu ⋮ → “Install app”. On iPhone, use Share → “Add to Home Screen”. If nothing happens, your launcher may need to allow home-screen shortcuts.'));
+    }
+    return wrap;
+  }
+
   function renderSettings() {
     const bar = el('header', { className: 'bar' }, [
       el('span', { className: 'wordmark' }, 'Folia'),
       el('button', { className: 'bar-link', onclick: goBack }, 'Done'),
     ]);
     const content = el('section', { className: 'content settings' });
+    if (!isStandalone()) content.append(el('h2', { className: 'sec' }, 'Install'), installSection());
     content.append(el('h2', { className: 'sec' }, 'Theme'), themePicker());
     content.append(...typeControls());
     content.append(el('h2', { className: 'sec' }, 'Progress'));
