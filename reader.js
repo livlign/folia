@@ -183,7 +183,8 @@ export function createLoop(ctx) {
   function renderSettings() {
     const bar = el('header', { className: 'bar' }, [
       el('span', { className: 'wordmark' }, 'Folia'),
-      el('button', { className: 'bar-link', onclick: goBack }, 'Done'),
+      el('span', { className: 'bar-spacer' }),
+      el('button', { className: 'done', onclick: goBack }, 'Done'),
     ]);
     const content = el('section', { className: 'content settings' });
     if (!isStandalone()) content.append(el('h2', { className: 'sec' }, 'Install'), installSection());

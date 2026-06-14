@@ -1,15 +1,20 @@
+// Curated to families that are reliably distinct on any device. Named system
+// fonts (Georgia, Palatino) were dropped — most devices fall back to the same
+// serif, so they looked identical. Only Newsreader and Mono are bundled; Serif
+// and Sans use the platform's own serif/sans, which always differ in category.
 export const FONTS = [
-  { id: 'newsreader', name: 'Newsreader', stack: "'Newsreader', Georgia, 'Times New Roman', serif" },
-  { id: 'georgia', name: 'Georgia', stack: "Georgia, 'Times New Roman', serif" },
-  { id: 'palatino', name: 'Palatino', stack: "'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif" },
+  { id: 'newsreader', name: 'Newsreader', stack: "'Newsreader', Georgia, serif" },
+  { id: 'serif', name: 'Serif', stack: "ui-serif, Georgia, 'Times New Roman', serif" },
   { id: 'sans', name: 'Sans', stack: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" },
   { id: 'mono', name: 'Mono', stack: "'Spline Sans Mono', ui-monospace, 'SF Mono', Menlo, monospace" },
 ];
 
+// Steps spaced wide enough to read as distinct (400→600→800). Fully honoured by
+// the variable Newsreader; system fonts snap to their nearest available weight.
 export const WEIGHTS = [
   { id: 'regular', name: 'Regular', value: '400' },
-  { id: 'medium', name: 'Medium', value: '500' },
   { id: 'semibold', name: 'Semibold', value: '600' },
+  { id: 'bold', name: 'Bold', value: '800' },
 ];
 
 export const STYLES = [
