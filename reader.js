@@ -69,8 +69,27 @@ export function createLoop(ctx) {
   }
 
   // ---- navigation (history-backed, so Android back/edge-swipe maps to in-app back) ----
-  function reroll() { history.replaceState({ view: 'discovery' }, ''); transitionTo(toDiscovery); }
+  function reroll() { transitionTo(toDiscovery); }
   function goBack() { history.back(); }
+
+  // Remember the current discovery page so returning from settings/reading — or
+  // the app relaunching shortly after (e.g. MIUI killing it on app-switch) —
+  // restores the same page instead of silently rolling a new one. A genuinely
+  // fresh session (older than the window) still opens on a new random page.
+  const PICK_KEY = 'folia-pick';
+  const PICK_TTL = 30 * 60 * 1000;
+  function savePick(id, start) {
+    try { localStorage.setItem(PICK_KEY, JSON.stringify({ id, start, t: Date.now() })); } catch (e) { /* private mode */ }
+  }
+  function loadPick() {
+    try {
+      const p = JSON.parse(localStorage.getItem(PICK_KEY) || 'null');
+      if (!p || Date.now() - p.t > PICK_TTL) return null;
+      const book = ctx.books.find((b) => b.id === p.id);
+      if (!book || p.start < 0 || p.start >= book.paragraphs.length) return null;
+      return { book, start: p.start };
+    } catch (e) { return null; }
+  }
 
   function themePicker() {
     const wrap = el('div', { className: 'themes' });
@@ -78,7 +97,7 @@ export function createLoop(ctx) {
       c.classList.toggle('active', c.dataset.theme === getTheme()));
     THEMES.forEach((t) => {
       const swatch = el('span', { className: 'sw' });
-      swatch.style.background = `linear-gradient(135deg, ${t.swatch} 0 50%, ${t.accent} 50% 100%)`;
+      swatch.style.background = `linear-gradient(135deg, ${t.swatch} 0%, ${t.swatch} 40%, ${t.accent} 100%)`;
       const chip = el('button', { className: 'theme-chip',
         onclick: () => { setTheme(t.id); sync(); } }, [swatch, el('span', {}, t.name)]);
       chip.dataset.theme = t.id;
@@ -244,6 +263,8 @@ export function createLoop(ctx) {
     const hint = el('div', { className: 'hint' }, 'Tap to read · swipe for another');
     const screen = el('div', { className: 'screen discover' }, [bar, content, hint]);
     mountScreen(screen);
+    history.replaceState({ view: 'discovery', id: book.id, start }, '');
+    savePick(book.id, start);
 
     const end = fill(book.paragraphs, start, domMeasurer(content, paraEl));
     for (let i = start; i <= end; i++) see(book, i);
@@ -393,12 +414,15 @@ export function createLoop(ctx) {
     } else if (s.view === 'settings') {
       transitionTo(renderSettings);
     } else {
-      transitionTo(toDiscovery);
+      const book = s.id && ctx.books.find((b) => b.id === s.id);
+      transitionTo(book ? () => renderDiscovery(book, s.start) : toDiscovery);
     }
   });
   window.addEventListener('pagehide', flushSeen);
 
   function start() {
+    const saved = loadPick();
+    if (saved) { renderDiscovery(saved.book, saved.start); return; }
     history.replaceState({ view: 'discovery' }, '');
     toDiscovery();
   }
